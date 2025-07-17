@@ -21,7 +21,7 @@ def is_valid_ip(ip):
     return re.match(ip_pattern, ip) is not None
 
 # Bot information
-API_ID = environ.get('API_ID', '')
+API_ID = environ.get('API_ID', '6674102')
 if len(API_ID) == 0:
     logger.error('API_ID is missing, exiting now')
     exit()
