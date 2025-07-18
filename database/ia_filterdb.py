@@ -179,7 +179,7 @@ def unpack_new_file_id(new_file_id):
     )
     return file_id
 
-async def send_msg(bot, filename, caption): 
+async def send_msg(bot, filename, caption):
     try:
         filename = re.sub(r'\(\@\S+\)|\[\@\S+\]|\b@\S+|\bwww\.\S+', '', filename).strip()
         caption = re.sub(r'\(\@\S+\)|\[\@\S+\]|\b@\S+|\bwww\.\S+', '', caption).strip()
@@ -189,10 +189,10 @@ async def send_msg(bot, filename, caption):
 
         pattern = r"(?i)(?:s|season)0*(\d{1,2})"
         season = re.search(pattern, caption) or re.search(pattern, filename)
-        season = season.group(1) if season else None 
+        season = season.group(1) if season else None
 
         if year:
-            filename = filename[: filename.find(year) + 4]  
+            filename = filename[: filename.find(year) + 4]
         elif season and season in filename:
             filename = filename[: filename.find(season) + 1]
 
@@ -212,19 +212,21 @@ async def send_msg(bot, filename, caption):
         text = text.format(filename, quality, language)
 
         if await add_name(OWNERID, filename):
-            imdb = await get_movie_details(filename)  
+            imdb = await get_movie_details(filename)
             resized_poster = None
 
             if imdb:
                 poster_url = imdb.get('poster_url')
                 if poster_url:
-                    resized_poster = await fetch_image(poster_url)  
+                    resized_poster = await fetch_image(poster_url)
 
             filenames = filename.replace(" ", '-')
             btn = [[InlineKeyboardButton('🌲 Get Files 🌲', url=f"https://telegram.me/{temp.U_NAME}?start=getfile-{filenames}")]]
             
             if resized_poster:
                 await bot.send_photo(chat_id=UPDATES_LINK, photo=resized_poster, caption=text, reply_markup=InlineKeyboardMarkup(btn))
-            else:              
+            else:
                 await bot.send_message(chat_id=UPDATES_LINK, text=text, reply_markup=InlineKeyboardMarkup(btn))
-                
+
+    except Exception as e:
+        logger.error(f"❌ Error in send_msg(): {e}")
