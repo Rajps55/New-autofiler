@@ -244,5 +244,13 @@ class Database:
     def get_bot_sttgs(self):
         return self.stg.find_one({'id': BOT_ID})
 
+    def ensure_default_settings(self):
+        if not self.stg.find_one({'id': BOT_ID}):
+            self.stg.insert_one({
+                'id': BOT_ID,
+                'AUTO_FILTER': True,
+                'PM_SEARCH': True,
+                'REQUEST_FORCE_SUB_CHANNELS': None
+
 
 db = Database()
