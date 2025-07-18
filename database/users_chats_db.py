@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from info import BOT_ID, ADMINS, DATABASE_NAME, DATA_DATABASE_URL, FILES_DATABASE_URL, SECOND_FILES_DATABASE_URL, IMDB_TEMPLATE, WELCOME_TEXT, LINK_MODE, TUTORIAL, SHORTLINK_URL, SHORTLINK_API, SHORTLINK, FILE_CAPTION, IMDB, WELCOME, SPELL_CHECK, PROTECT_CONTENT, AUTO_DELETE, IS_STREAM, VERIFY_EXPIRE
+from info import BOT_ID, ADMINS, DATABASE_NAME, DATA_DATABASE_URL, FILES_DATABASE_URL, SECOND_FILES_DATABASE_URL, IMDB_TEMPLATE, WELCOME_TEXT, LINK_MODE, TUTORIAL, SHORTLINK_URL, SHORTLINK_API, SHORTLINK, FILE_CAPTION, IMDB, WELCOME, SPELL_CHECK, PROTECT_CONTENT, AUTO_DELETE, IS_STREAM,DEENDAYAL_MOVIE_UPDATE_NOTIFICATION, VERIFY_EXPIRE
 import time
 from datetime import datetime
 
@@ -203,7 +203,13 @@ class Database:
     async def get_all_chats_count(self):
         grp = self.grp.count_documents({})
         return grp
-    
+
+    async def movie_update_status(self, bot_id):
+        return await self.get_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', DEENDAYAL_MOVIE_UPDATE_NOTIFICATION)
+
+    async def update_movie_update_status(self, bot_id, enable):
+        await self.update_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', enable)
+         
     def get_plan(self, id):
         st = self.prm.find_one({'id': id})
         if st:
