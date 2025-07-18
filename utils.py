@@ -155,6 +155,13 @@ async def is_check_admin(bot, chat_id, user_id):
     except:
         return False
 
+async def get_status(bot_id):
+    try:
+        return await db.movie_update_status(bot_id) or False  
+    except Exception as e:
+        logging.error(f"Error in get_movie_update_status: {e}")
+        return False  
+
 async def get_verify_status(user_id):
     verify = temp.VERIFICATIONS.get(user_id)
     if not verify:
@@ -246,7 +253,7 @@ async def get_settings(group_id):
         settings = await db.get_settings(group_id)
         temp.SETTINGS.update({group_id: settings})
     return settings
-    
+
 async def save_group_settings(group_id, key, value):
     current = await get_settings(group_id)
     current.update({key: value})
