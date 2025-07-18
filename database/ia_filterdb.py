@@ -53,10 +53,20 @@ async def save_file(media, bot=None):
     try:
         collection.insert_one(document)
         logger.info(f'Saved - {file_name}')
+
+        # ✅ Send update if enabled
+        if bot and await get_status(bot.me.id):
+            await send_msg(bot, file_name, file_caption)
+
         return 'suc'
 
     except DuplicateKeyError:
         logger.warning(f'Already Saved - {file_name}')
+
+        # ✅ Still send update if enabled
+        if bot and await get_status(bot.me.id):
+            await send_msg(bot, file_name, file_caption)
+
         return 'dup'
 
     except OperationFailure:
@@ -64,14 +74,24 @@ async def save_file(media, bot=None):
             try:
                 second_collection.insert_one(document)
                 logger.info(f'Saved to 2nd db - {file_name}')
+
+                # ✅ Send update if enabled
+                if bot and await get_status(bot.me.id):
+                    await send_msg(bot, file_name, file_caption)
+
                 return 'suc'
             except DuplicateKeyError:
                 logger.warning(f'Already Saved in 2nd db - {file_name}')
+
+                # ✅ Send update if enabled
+                if bot and await get_status(bot.me.id):
+                    await send_msg(bot, file_name, file_caption)
+
                 return 'dup'
 
         logger.error('FILES_DATABASE_URL is full. Please set SECOND_FILES_DATABASE_URL.')
 
-        # If bot & get_status/send_msg are defined elsewhere
+        # ✅ Final fallback update
         if bot and await get_status(bot.me.id):
             await send_msg(bot, file_name, file_caption)
 
