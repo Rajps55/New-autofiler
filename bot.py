@@ -36,6 +36,7 @@ class Bot(Client):
         )
 
     async def start(self):
+        await db.ensure_default_settings()  # ✅ Add this line early in start
         await super().start()
         temp.START_TIME = time.time()
         b_users, b_chats = await db.get_banned()
