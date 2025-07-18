@@ -38,45 +38,44 @@ def db_count_documents():
      return collection.count_documents({})
 
 async def save_file(media, bot=None):
-    """Save file in database"""
-    file_id = unpack_new_file_id(media.file_id)
-    file_name = re.sub(r"@\w+|(_|\-|\.|\+)", " ", str(media.file_name or "Unnamed"))
-    file_caption = re.sub(r"@\w+|(_|\-|\.|\+)", " ", str(media.caption or ""))
+    """Save file in database"""
+    file_id = unpack_new_file_id(media.file_id)
+    file_name = re.sub(r"@\w+|(_|\-|\.|\+)", " ", str(media.file_name or "Unnamed"))
+    file_caption = re.sub(r"@\w+|(_|\-|\.|\+)", " ", str(media.caption or ""))
 
-    document = {
-        '_id': file_id,
-        'file_name': file_name,
-        'file_size': media.file_size,
-        'caption': file_caption
-    }
+    document = {
+        '_id': file_id,
+        'file_name': file_name,
+        'file_size': media.file_size,
+        'caption': file_caption
+    }
 
-    try:
-        collection.insert_one(document)
-        logger.info(f'Saved - {file_name}')
-        return 'suc'
+    try:
+        collection.insert_one(document)
+        logger.info(f'Saved - {file_name}')
+        return 'suc'
 
-    except DuplicateKeyError:
-        logger.warning(f'Already Saved - {file_name}')
-        return 'dup'
+    except DuplicateKeyError:
+        logger.warning(f'Already Saved - {file_name}')
+        return 'dup'
 
-    except OperationFailure:
-        if SECOND_FILES_DATABASE_URL:
-            try:
-                second_collection.insert_one(document)
-                logger.info(f'Saved to 2nd db - {file_name}')
-                return 'suc'
+    except OperationFailure:
+        if SECOND_FILES_DATABASE_URL:
+            try:
+                second_collection.insert_one(document)
+                logger.info(f'Saved to 2nd db - {file_name}')
+                return 'suc'
+            except DuplicateKeyError:
+                logger.warning(f'Already Saved in 2nd db - {file_name}')
+                return 'dup'
 
-            except DuplicateKeyError:
-                logger.warning(f'Already Saved in 2nd db - {file_name}')
-                return 'dup'
+        logger.error('FILES_DATABASE_URL is full. Please set SECOND_FILES_DATABASE_URL.')
 
-        logger.error('FILES_DATABASE_URL is full. Please set SECOND_FILES_DATABASE_URL.')
+        # If bot & get_status/send_msg are defined elsewhere
+        if bot and await get_status(bot.me.id):
+            await send_msg(bot, file_name, file_caption)
 
-        # If bot & get_status/send_msg are defined elsewhere
-        if bot and await get_status(bot.me.id):
-            await send_msg(bot, file_name, file_caption)
-
-        return 'err'
+        return 'err'
 
 async def get_search_results(query, max_results=MAX_BTN, offset=0, lang=None):
     query = str(query).strip()
