@@ -19,38 +19,38 @@ BUTTONS = {}
 CAP = {}
 
 @Client.on_message(filters.private & filters.text & filters.incoming)
-async def pm_search(client, message):
-    if message.text.startswith("/"):
-        return
+async def pm_search(client, message):                            # 1
+    if message.text.startswith("/"):                            # 2
+        return                                                  # 3
 
-    stg = db.get_bot_sttgs()
+    stg = db.get_bot_sttgs()                                    # 5
 
-    if not (stg or {}).get('PM_SEARCH'):  # ✅ Line 26 - Safe check
-        return await message.reply_text('PM search was disabled!')
+    if not (stg or {}).get('PM_SEARCH'):                        # 7 ✅ prevents NoneType.get error
+        return await message.reply_text('PM search was disabled!')  # 8
 
-    if await is_premium(message.from_user.id, client):
-        if not (stg or {}).get('AUTO_FILTER'):  # ✅ Line 29 - FIXED here also
-            return await message.reply_text('Auto filter was disabled!')
+    if await is_premium(message.from_user.id, client):          # 10
+        if not (stg or {}).get('AUTO_FILTER'):                  # 11 ✅ again safe check
+            return await message.reply_text('Auto filter was disabled!')  # 12
 
-        s = await message.reply(f"<b><i>⚠️ `{message.text}` searching...</i></b>", quote=True)
-        await auto_filter(client, message, s)
+        s = await message.reply(                                # 14
+            f"<b><i>⚠️ `{message.text}` searching...</i></b>",  # 15
+            quote=True)                                         # 16
+        await auto_filter(client, message, s)                   # 17
 
-    else:
-        files, n_offset, total = await get_search_results(message.text)
-        btn = [[
-            InlineKeyboardButton("🗂 ᴄʟɪᴄᴋ ʜᴇʀᴇ 🗂", url=FILMS_LINK)
-        ],[
-            InlineKeyboardButton('🤑 Buy Premium', url=f"https://t.me/{temp.U_NAME}?start=premium")
-        ]]
-        reply_markup = InlineKeyboardMarkup(btn)
+    else:                                                       # 19
+        files, n_offset, total = await get_search_results(message.text)  # 20
+        btn = [[                                                # 21
+            InlineKeyboardButton("🗂 ᴄʟɪᴄᴋ ʜᴇʀᴇ 🗂", url=FILMS_LINK)  # 22
+        ],[                                                     # 23
+            InlineKeyboardButton('🤑 Buy Premium', url=f"https://t.me/{temp.U_NAME}?start=premium")  # 24
+        ]]                                                      # 25
+        reply_markup = InlineKeyboardMarkup(btn)                # 26
 
-        if int(total) != 0:
-            await message.reply_text(
-                f'<b><i>🤗 ᴛᴏᴛᴀʟ <code>{total}</code> ʀᴇꜱᴜʟᴛꜱ ꜰᴏᴜɴᴅ ɪɴ ᴛʜɪꜱ ɢʀᴏᴜᴘ 👇</i></b>\n\nor buy premium subscription',
-                reply_markup=reply_markup
+        if int(total) != 0:                                     # 28
+            await message.reply_text(                           # 29
+                f'<b><i>🤗 ᴛᴏᴛᴀʟ <code>{total}</code> ʀᴇꜱᴜʟᴛꜱ ꜰᴏᴜɴᴅ ɪɴ ᴛʜɪꜱ ɢʀᴏᴜᴘ 👇</i></b>\n\nor buy premium subscription',  # 30
+                reply_markup=reply_markup                       # 31
             )
-
-            
 
 @Client.on_message(filters.group & filters.text & filters.incoming)
 async def group_search(client, message):
