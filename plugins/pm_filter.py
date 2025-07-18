@@ -52,8 +52,11 @@ async def pm_search(client, message):
 async def group_search(client, message):
     chat_id = message.chat.id
     user_id = message.from_user.id if message and message.from_user else 0
+
     stg = db.get_bot_sttgs()
-    if (stg or {}).get('AUTO_FILTER'):  # ✅ Line 7:
+    print("⚙️ DEBUG: Bot settings (stg) =", stg)  # 👈 Yeh line add ki gayi hai
+
+    if (stg or {}).get('AUTO_FILTER'):  # ✅ Line 7
         if not user_id:
             await message.reply("I'm not working for anonymous admin!")
             return
@@ -65,10 +68,10 @@ async def group_search(client, message):
                 ]]
                 await message.reply_text(f'Total {total} results found in this group', reply_markup=InlineKeyboardMarkup(btn))
             return
-            
+
         if message.text.startswith("/"):
             return
-            
+
         elif '@admin' in message.text.lower() or '@admins' in message.text.lower():
             if await is_check_admin(client, message.chat.id, message.from_user.id):
                 return
@@ -98,7 +101,7 @@ async def group_search(client, message):
                 return
             await message.delete()
             return await message.reply('Links not allowed here!')
-        
+
         elif '#request' in message.text.lower():
             if message.from_user.id in ADMINS:
                 return
@@ -109,6 +112,7 @@ async def group_search(client, message):
             s = await message.reply(f"<b><i>⚠️ `{message.text}` searching...</i></b>")
             await auto_filter(client, message, s)
     else:
+        print("⚠️ DEBUG: AUTO_FILTER setting is off or missing.")
         k = await message.reply_text('Auto Filter Off! ❌')
         await asyncio.sleep(5)
         await k.delete()
