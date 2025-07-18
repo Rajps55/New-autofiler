@@ -37,7 +37,6 @@ def second_db_count_documents():
 def db_count_documents():
      return collection.count_documents({})
 
-
 async def save_file(media, bot=None):
     """Save file in database"""
     file_id = unpack_new_file_id(media.file_id)
