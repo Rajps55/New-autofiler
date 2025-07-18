@@ -204,12 +204,7 @@ class Database:
         grp = self.grp.count_documents({})
         return grp
 
-    async def pm_search_status(self, bot_id):
-        return await self.get_bot_setting(bot_id, 'PM_SEARCH', PM_SEARCH)
-
-    async def update_pm_search_status(self, bot_id, enable):
-        await self.update_bot_setting(bot_id, 'PM_SEARCH', enable)
-
+    
     async def movie_update_status(self, bot_id):
         return await self.get_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', DEENDAYAL_MOVIE_UPDATE_NOTIFICATION)
 
