@@ -1,5 +1,5 @@
 from hydrogram.errors import UserNotParticipant, FloodWait
-from info import LONG_IMDB_DESCRIPTION, ADMINS, IS_PREMIUM, TIME_ZONE
+from info import LONG_IMDB_DESCRIPTION, ADMINS, IS_PREMIUM, TIME_ZONE, DEENDAYAL_IMAGE_FETCH
 from imdb import Cinemagoer
 import asyncio
 from hydrogram.types import InlineKeyboardButton
@@ -70,6 +70,31 @@ def upload_image(file_path):
     else:
         return None
 
+async def fetch_image(url, size=(720, 720)):
+    if not DEENDAYAL_IMAGE_FETCH:
+        print("Image fetching is disabled.")
+        return None
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                if response.status == 200:
+                    content = await response.read()
+                    img = Image.open(BytesIO(content))
+                    img = img.resize(size, Image.LANCZOS)
+                    img_byte_arr = BytesIO()
+                    img.save(img_byte_arr, format='JPEG')
+                    img_byte_arr.seek(0)
+                    return img_byte_arr
+                else:
+                    print(f"Failed to fetch image: {response.status}")
+    except aiohttp.ClientError as e:
+        print(f"HTTP request error in fetch_image: {e}")
+    except IOError as e:
+        print(f"IO error in fetch_image: {e}")
+    except Exception as e:
+        print(f"Unexpected error in fetch_image: {e}")
+    return None
 
 async def get_poster(query, bulk=False, id=False, file=None):
     if not id:
