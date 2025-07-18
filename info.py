@@ -105,7 +105,7 @@ VERIFY_EXPIRE = int(environ.get('VERIFY_EXPIRE', 86400)) # Add time in seconds
 WELCOME_TEXT = environ.get("WELCOME_TEXT", script.WELCOME_TEXT)
 INDEX_EXTENSIONS = [extensions.lower() for extensions in environ.get('INDEX_EXTENSIONS', 'mp4 mkv').split()]
 PM_FILE_DELETE_TIME = int(environ.get('PM_FILE_DELETE_TIME', '3600'))
-OWNERID = int(os.environ.get('OWNERID', '6174868004')  # Replace with the actual admin ID
+OWNERID = int(os.environ.get('OWNERID', '6174868004'))  # Replace with the actual admin ID
 
 # Movie Notification & Update Settings
 # ============================
