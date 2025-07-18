@@ -250,7 +250,7 @@ class Database:
                 'id': BOT_ID,
                 'AUTO_FILTER': True,
                 'PM_SEARCH': True,
-                'REQUEST_FORCE_SUB_CHANNELS': None
+                'REQUEST_FORCE_SUB_CHANNELS': None})
 
 
 db = Database()
