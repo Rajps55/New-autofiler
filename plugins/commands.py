@@ -143,7 +143,7 @@ async def start(client, message):
         return 
 
     if mc.startswith('all'):
-       _, grp_id, key = mc.split("_", 2)
+       _, grp_id, key = mc.split("_", 2)  # ✅ normal space only
        files = temp.FILES.get(key)
        if not files:
            return await message.reply('No Such All Files Exist!')
