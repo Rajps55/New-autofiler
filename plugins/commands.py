@@ -227,13 +227,18 @@ async def start(client, message):
             )
             return
 
-            
-    CAPTION = settings['caption']
+    CAPTION = settings.get('caption', '🎬 {file_name}\n📦 {file_size}')
+    f_caption = CAPTION.format(
+        file_name=files['file_name'],
+        file_size=get_size(files['file_size']),
+        file_caption=files.get('caption', '')
+    )       
+    """CAPTION = settings['caption']
     f_caption = CAPTION.format(
         file_name = files['file_name'],
         file_size = get_size(files['file_size']),
         file_caption=files['caption']
-    )
+    )"""
     if IS_STREAM:
         btn = [[
             InlineKeyboardButton("✛ ᴡᴀᴛᴄʜ & ᴅᴏᴡɴʟᴏᴀᴅ ✛", callback_data=f"stream#{file_id}")
