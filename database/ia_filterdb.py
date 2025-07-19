@@ -38,7 +38,7 @@ def db_count_documents():
      return collection.count_documents({})
     
 async def add_name(user_id, filename):
-    user_db = mydb[str(user_id)]
+    user_db = db[str(user_id)]
     user = {'_id': filename}
     existing_user = user_db.find_one({'_id': filename})
     if existing_user is not None:
