@@ -141,51 +141,48 @@ async def start(client, message):
             parse_mode=enums.ParseMode.HTML
         )
         return 
-        
     if mc.startswith('all'):
-         _, grp_id, key = mc.split("_", 2)
+        _, grp_id, key = mc.split("_", 2)
         files = temp.FILES.get(key)
         if not files:
             return await message.reply('No Such All Files Exist!')
-            settings = await get_settings(int(grp_id))
-            file_ids = []
-            total_files = await message.reply(f"<b><i>🗂 Total files - <code>{len(files)}</code></i></b>")
-            for file in files:
-                CAPTION = settings.get('caption', '📁 {file_name}\n💾 {file_size}')
-                f_caption = CAPTION.format(
-                    file_name=file.get('file_name', 'Unknown'),
-                    file_size=get_size(file.get('file_size', 0)),
-                    file_caption=file.get('caption', '')
-        )
+        settings = await get_settings(int(grp_id))
+        file_ids = []
+        total_files = await message.reply(f"<b><i>🗂 Total files - <code>{len(files)}</code></i></b>")
+        for file in files:
+            CAPTION = settings['caption']
+            f_caption = CAPTION.format(
+                file_name=file['file_name'],
+                file_size=get_size(file['file_size']),
+                file_caption=file['caption']
+            )
+            sent = await message.reply(f_caption)
+            file_ids.append(sent.id)
+            if IS_STREAM:
+                btn = [[
+                    InlineKeyboardButton("✛ ᴡᴀᴛᴄʜ & ᴅᴏᴡɴʟᴏᴀᴅ ✛", callback_data=f"stream#{file['_id']}")
+                ],[
+                    InlineKeyboardButton('⚡️ ᴜᴘᴅᴀᴛᴇs', url=UPDATES_LINK),
+                    InlineKeyboardButton('💡 ꜱᴜᴘᴘᴏʀᴛ', url=SUPPORT_LINK)
+                ],[
+                    InlineKeyboardButton('⁉️ ᴄʟᴏsᴇ ⁉️', callback_data='close_data')
+                ]]
+            else:
+                btn = [[
+                    InlineKeyboardButton('⚡️ ᴜᴘᴅᴀᴛᴇs', url=UPDATES_LINK),
+                    InlineKeyboardButton('💡 ꜱᴜᴘᴘᴏʀᴛ', url=SUPPORT_LINK)
+                ],[
+                    InlineKeyboardButton('⁉️ ᴄʟᴏsᴇ ⁉️', callback_data='close_data')
+                ]]
 
-        sent = await message.reply(f_caption)
-        file_ids.append(sent.id)
-
-        if IS_STREAM:
-            btn = [[
-                InlineKeyboardButton("✛ ᴡᴀᴛᴄʜ & ᴅᴏᴡɴʟᴏᴀᴅ ✛", callback_data=f"stream#{file['_id']}")
-            ], [
-                InlineKeyboardButton('⚡️ ᴜᴘᴅᴀᴛᴇs', url=UPDATES_LINK),
-                InlineKeyboardButton('💡 ꜱᴜᴘᴘᴏʀᴛ', url=SUPPORT_LINK)
-            ], [
-                InlineKeyboardButton('⁉️ ᴄʟᴏsᴇ ⁉️', callback_data='close_data')
-            ]]
-        else:
-            btn = [[
-                InlineKeyboardButton('⚡️ ᴜᴘᴅᴀᴛᴇs', url=UPDATES_LINK),
-                InlineKeyboardButton('💡 ꜱᴜᴘᴘᴏʀᴛ', url=SUPPORT_LINK)
-            ], [
-                InlineKeyboardButton('⁉️ ᴄʟᴏsᴇ ⁉️', callback_data='close_data')
-            ]]
-
-        msg = await client.send_cached_media(
-            chat_id=message.from_user.id,
-            file_id=file['_id'],
-            caption=f_caption,
-            protect_content=False,
-            reply_markup=InlineKeyboardMarkup(btn)
-        )
-        file_ids.append(msg.id)
+            msg = await client.send_cached_media(
+                chat_id=message.from_user.id,
+                file_id=file['_id'],
+                caption=f_caption,
+                protect_content=False,
+                reply_markup=InlineKeyboardMarkup(btn)
+            )
+            file_ids.append(msg.id)    
 
     time = get_readable_time(PM_FILE_DELETE_TIME)
     vp = await message.reply(
