@@ -255,8 +255,8 @@ async def send_msg(bot, filename, caption):
                     resized_poster = await fetch_image(poster_url)
 
             filenames = filename.replace(" ", '-')
-            btn = [[InlineKeyboardButton('🌲 Get Files 🌲', url=f"https://telegram.me/{temp.U_NAME}?start=getfile-{filenames}")]]
-            
+            btn = [[InlineKeyboardButton('🌲 Get Files 🌲', url=f"https://t.me/{UPDATES_LINK}?start=getfile-{filenames}")]]
+
             if resized_poster:
                 await bot.send_photo(chat_id=UPDATES_LINK, photo=resized_poster, caption=text, reply_markup=InlineKeyboardMarkup(btn))
             else:
