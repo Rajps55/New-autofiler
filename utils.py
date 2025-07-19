@@ -9,6 +9,8 @@ from datetime import datetime
 from database.users_chats_db import db
 from shortzy import Shortzy
 import requests, pytz
+import logging
+
 
 imdb = Cinemagoer() 
 
