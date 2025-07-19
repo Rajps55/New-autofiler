@@ -250,3 +250,12 @@ async def send_msg(bot, filename, caption):
 
     except Exception as e:
         logger.error(f"❌ Error in send_msg(): {e}")
+        
+async def get_qualities(text, qualities: list):
+    """Get all Quality from text"""
+    quality = []
+    for q in qualities:
+        if q in text:
+            quality.append(q)
+    quality = ", ".join(quality)
+    return quality[:-2] if quality.endswith(", ") else quality
