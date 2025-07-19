@@ -251,6 +251,7 @@ class Database:
 
     def get_bot_setting(self, bot_id, key, default=None):
         data = self.stg.find_one({'id': bot_id})
+        print("get_bot_setting returned:", data)  # ✅ Yahan likho
         return data.get(key, default) if data else default
 
     def ensure_default_settings(self):
