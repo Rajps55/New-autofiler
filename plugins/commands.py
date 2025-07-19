@@ -184,50 +184,48 @@ async def start(client, message):
             file_ids.append(msg.id)
 
         time = get_readable_time(PM_FILE_DELETE_TIME)
-    vp = await message.reply(
-        f"Nᴏᴛᴇ: Tʜɪs ғɪʟᴇs ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇ ɪɴ {time} ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛs. Sᴀᴠᴇ ᴛʜᴇ ғɪʟᴇs ᴛᴏ sᴏᴍᴇᴡʜᴇʀᴇ ᴇʟsᴇ"
-    )
-    await asyncio.sleep(PM_FILE_DELETE_TIME)
-
-    buttons = [[
-        InlineKeyboardButton('ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ', callback_data=f"get_del_send_all_files#{grp_id}#{key}")
-    ]] 
-
-    await client.delete_messages(
-        chat_id=message.chat.id,
-        message_ids=file_ids + [total_files.id]
-    )
-    await vp.edit(
-        "Tʜᴇ ғɪʟᴇ ʜᴀs ʙᴇᴇɴ ɢᴏɴᴇ ! Cʟɪᴄᴋ ɢɪᴠᴇɴ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ɪᴛ ᴀɢᴀɪɴ.",
-        reply_markup=InlineKeyboardMarkup(buttons)
-    )
-
-    # ✅ START: safer unpacking of mc
-    parts = mc.split("_", 2)
-    if len(parts) != 3:
-        return await message.reply("⚠️ Invalid file link or broken data. Please try again.")
-    type_, grp_id, file_id = parts
-    # ✅ END
-
-    files_ = await get_file_details(file_id)
-    if not files_:
-        return await message.reply('No Such File Exist!')
-    files = files_
-    settings = await get_settings(int(grp_id))
-
-    if type_ != 'shortlink' and settings['shortlink'] and not await is_premium(message.from_user.id, client):
-        link = await get_shortlink(settings['url'], settings['api'], f"https://t.me/{temp.U_NAME}?start=shortlink_{grp_id}_{file_id}")
-        btn = [[
-            InlineKeyboardButton("♻️ Get File ♻️", url=link)
-        ],[
-            InlineKeyboardButton("📍 ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ 📍", url=settings['tutorial'])
-        ]]
-        await message.reply(
-            f"[{get_size(files['file_size'])}] {files['file_name']}\n\nYour file is ready, Please get using this link. 👍",
-            reply_markup=InlineKeyboardMarkup(btn),
-            protect_content=True
+        vp = await message.reply(
+            f"Nᴏᴛᴇ: Tʜɪs ғɪʟᴇs ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇ ɪɴ {time} ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛs. Sᴀᴠᴇ ᴛʜᴇ ғɪʟᴇs ᴛᴏ sᴏᴍᴇᴡʜᴇʀᴇ ᴇʟsᴇ"
         )
-        return
+        await asyncio.sleep(PM_FILE_DELETE_TIME)
+        buttons = [[
+            InlineKeyboardButton('ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ', callback_data=f"get_del_send_all_files#{grp_id}#{key}")
+        ]] 
+        await client.delete_messages(
+            chat_id=message.chat.id,
+            message_ids=file_ids + [total_files.id]
+        )
+        await vp.edit(
+            "Tʜᴇ ғɪʟᴇ ʜᴀs ʙᴇᴇɴ ɢᴏɴᴇ ! Cʟɪᴄᴋ ɢɪᴠᴇɴ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ɪᴛ ᴀɢᴀɪɴ.",
+            reply_markup=InlineKeyboardMarkup(buttons)
+        )
+
+        # ✅ START: safer unpacking of mc
+        parts = mc.split("_", 2)
+        if len(parts) != 3:
+            return await message.reply("⚠️ Invalid file link or broken data. Please try again.")
+        type_, grp_id, file_id = parts
+        # ✅ END
+
+        files_ = await get_file_details(file_id)
+        if not files_:
+            return await message.reply('No Such File Exist!')
+        files = files_
+        settings = await get_settings(int(grp_id))
+
+        if type_ != 'shortlink' and settings['shortlink'] and not await is_premium(message.from_user.id, client):
+            link = await get_shortlink(settings['url'], settings['api'], f"https://t.me/{temp.U_NAME}?start=shortlink_{grp_id}_{file_id}")
+            btn = [[
+                InlineKeyboardButton("♻️ Get File ♻️", url=link)
+            ],[
+                InlineKeyboardButton("📍 ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ 📍", url=settings['tutorial'])
+            ]]
+            await message.reply(
+                f"[{get_size(files['file_size'])}] {files['file_name']}\n\nYour file is ready, Please get using this link. 👍",
+                reply_markup=InlineKeyboardMarkup(btn),
+                protect_content=True
+            )
+            return
 
             
     CAPTION = settings['caption']
