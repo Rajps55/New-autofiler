@@ -248,8 +248,12 @@ class Database:
             self.stg.insert_one({'id': BOT_ID, var: val})
         self.stg.update_one({'id': BOT_ID}, {'$set': {var: val}})
 
-    def get_bot_sttgs(self):
-        return self.stg.find_one({'id': BOT_ID})
+    async def get_bot_setting(self, bot_id, key, default=None):
+        data = await self.stg.find_one({'id': bot_id})
+        if not data:
+            return default
+        return data.get(key, default)
+
 
     def ensure_default_settings(self):
         if not self.stg.find_one({'id': BOT_ID}):
