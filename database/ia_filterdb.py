@@ -244,7 +244,7 @@ async def send_msg(bot, filename, caption):
         text = text.format(filename, quality, language)
 
         if await add_name(OWNERID, filename):
-            imdb = await get_movie_details(filename)
+            imdb = await get_poster(filename)
             resized_poster = None
 
             if imdb:
