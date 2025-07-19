@@ -157,8 +157,8 @@ async def start(client, message):
                 file_size=get_size(file['file_size']),
                 file_caption=file['caption']
             )   
-                sent = await message.reply(f_caption)
-                file_ids.append(sent.id)
+             sent = await message.reply(f_caption)
+             file_ids.append(sent.id)
 
             if IS_STREAM:
                 btn = [[
