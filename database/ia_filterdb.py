@@ -36,6 +36,18 @@ def second_db_count_documents():
 
 def db_count_documents():
      return collection.count_documents({})
+    
+async def add_name(user_id, filename):
+    user_db = mydb[str(user_id)]
+    user = {'_id': filename}
+    existing_user = user_db.find_one({'_id': filename})
+    if existing_user is not None:
+        return False
+    try:
+        user_db.insert_one(user)
+        return True
+    except DuplicateKeyError:
+        return False
 
 async def save_file(media, bot=None):
     """Save file in database"""
