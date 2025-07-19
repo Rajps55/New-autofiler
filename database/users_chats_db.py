@@ -206,10 +206,10 @@ class Database:
 
     
     async def movie_update_status(self, bot_id):
-        return await self.get_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', DEENDAYAL_MOVIE_UPDATE_NOTIFICATION)
+    return self.get_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', DEENDAYAL_MOVIE_UPDATE_NOTIFICATION)
 
     async def update_movie_update_status(self, bot_id, enable):
-        await self.update_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', enable)
+           self.update_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', enable)
 
          
     def get_plan(self, id):
@@ -249,12 +249,9 @@ class Database:
             self.stg.insert_one({'id': BOT_ID, var: val})
         self.stg.update_one({'id': BOT_ID}, {'$set': {var: val}})
 
-    async def get_bot_setting(self, bot_id, key, default=None):
-        data = await self.stg.find_one({'id': bot_id})
-        if not data:
-            return default
-        return data.get(key, default)
-
+    def get_bot_setting(self, bot_id, key, default=None):
+        data = self.stg.find_one({'id': bot_id})
+        return data.get(key, default) if data else default
 
     def ensure_default_settings(self):
         if not self.stg.find_one({'id': BOT_ID}):
