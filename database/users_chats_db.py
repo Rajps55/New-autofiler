@@ -210,6 +210,7 @@ class Database:
 
     async def update_movie_update_status(self, bot_id, enable):
         await self.update_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', enable)
+
          
     def get_plan(self, id):
         st = self.prm.find_one({'id': id})
