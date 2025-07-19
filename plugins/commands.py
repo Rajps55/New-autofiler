@@ -141,8 +141,32 @@ async def start(client, message):
             parse_mode=enums.ParseMode.HTML
         )
         return 
-        
+
     if mc.startswith('all'):
+    _, grp_id, key = mc.split("_", 2)
+    files = temp.FILES.get(key)
+    if not files:
+        return await message.reply('No Such All Files Exist!')
+
+    settings = await get_settings(int(grp_id))
+    file_ids = []
+    total_files = await message.reply(f"<b><i>🗂 Total files - <code>{len(files)}</code></i></b>")
+
+    for file in files:
+        # Safely get caption template
+        CAPTION = settings.get('caption', '📁 {file_name}\n💾 {file_size}')
+        f_caption = CAPTION.format(
+            file_name=file.get('file_name', 'Unknown'),
+            file_size=get_size(file.get('file_size', 0)),
+            file_caption=file.get('caption', '')
+        )
+
+        # Send the file or message here (example)
+        sent = await message.reply(f_caption)
+        file_ids.append(sent.id)
+
+        
+    """if mc.startswith('all'):
         _, grp_id, key = mc.split("_", 2)
         files = temp.FILES.get(key)
         if not files:
@@ -156,7 +180,7 @@ async def start(client, message):
                 file_name=file['file_name'],
                 file_size=get_size(file['file_size']),
                 file_caption=file['caption']
-            )      
+            )   """   
             if IS_STREAM:
                 btn = [[
                     InlineKeyboardButton("✛ ᴡᴀᴛᴄʜ & ᴅᴏᴡɴʟᴏᴀᴅ ✛", callback_data=f"stream#{file['_id']}")
@@ -227,18 +251,12 @@ async def start(client, message):
             )
             return
 
-    CAPTION = settings.get('caption', '🎬 {file_name}\n📦 {file_size}')
-    f_caption = CAPTION.format(
-        file_name=files['file_name'],
-        file_size=get_size(files['file_size']),
-        file_caption=files.get('caption', '')
-    )       
-    """CAPTION = settings['caption']
+    CAPTION = settings['caption']
     f_caption = CAPTION.format(
         file_name = files['file_name'],
         file_size = get_size(files['file_size']),
         file_caption=files['caption']
-    )"""
+    )
     if IS_STREAM:
         btn = [[
             InlineKeyboardButton("✛ ᴡᴀᴛᴄʜ & ᴅᴏᴡɴʟᴏᴀᴅ ✛", callback_data=f"stream#{file_id}")
