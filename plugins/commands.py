@@ -143,22 +143,19 @@ async def start(client, message):
         return 
         
     if mc.startswith('all'):
-            _, grp_id, key = mc.split("_", 2)
-    files = temp.FILES.get(key)
-    if not files:
-        return await message.reply('No Such All Files Exist!')
-
-    settings = await get_settings(int(grp_id))
-    file_ids = []
-
-    total_files = await message.reply(f"<b><i>🗂 Total files - <code>{len(files)}</code></i></b>")
-
-    for file in files:
-        CAPTION = settings.get('caption', '📁 {file_name}\n💾 {file_size}')
-        f_caption = CAPTION.format(
-            file_name=file.get('file_name', 'Unknown'),
-            file_size=get_size(file.get('file_size', 0)),
-            file_caption=file.get('caption', '')
+         _, grp_id, key = mc.split("_", 2)
+        files = temp.FILES.get(key)
+        if not files:
+            return await message.reply('No Such All Files Exist!')
+            settings = await get_settings(int(grp_id))
+            file_ids = []
+            total_files = await message.reply(f"<b><i>🗂 Total files - <code>{len(files)}</code></i></b>")
+            for file in files:
+                CAPTION = settings.get('caption', '📁 {file_name}\n💾 {file_size}')
+                f_caption = CAPTION.format(
+                    file_name=file.get('file_name', 'Unknown'),
+                    file_size=get_size(file.get('file_size', 0)),
+                    file_caption=file.get('caption', '')
         )
 
         sent = await message.reply(f_caption)
