@@ -206,7 +206,7 @@ class Database:
 
     
     async def movie_update_status(self, bot_id):
-    return self.get_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', DEENDAYAL_MOVIE_UPDATE_NOTIFICATION)
+        return self.get_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', DEENDAYAL_MOVIE_UPDATE_NOTIFICATION)
 
     async def update_movie_update_status(self, bot_id, enable):
            self.update_bot_setting(bot_id, 'DEENDAYAL_MOVIE_UPDATE_NOTIFICATION', enable)
