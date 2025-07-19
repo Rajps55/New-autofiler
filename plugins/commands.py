@@ -190,7 +190,7 @@ async def start(client, message):
         await asyncio.sleep(PM_FILE_DELETE_TIME)
         buttons = [[
             InlineKeyboardButton('ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ', callback_data=f"get_del_send_all_files#{grp_id}#{key}")
-        ]] 
+         ]]
         await client.delete_messages(
             chat_id=message.chat.id,
             message_ids=file_ids + [total_files.id]
