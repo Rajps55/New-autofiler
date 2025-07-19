@@ -5,7 +5,7 @@ import base64
 from hydrogram.file_id import FileId
 from pymongo import MongoClient, TEXT
 from pymongo.errors import DuplicateKeyError, OperationFailure
-from info import USE_CAPTION_FILTER, FILES_DATABASE_URL, SECOND_FILES_DATABASE_URL, DATABASE_NAME, COLLECTION_NAME, MAX_BTN, UPDATES_LINK, CAPTION_LANGUAGES, OWNERID
+from info import USE_CAPTION_FILTER, FILES_DATABASE_URL, SECOND_FILES_DATABASE_URL, DATABASE_NAME, COLLECTION_NAME, MAX_BTN, MOVIE_UPDATE_CHANNEL, CAPTION_LANGUAGES, OWNERID
 from utils import get_status, get_poster, temp, fetch_image
 from hydrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -255,12 +255,12 @@ async def send_msg(bot, filename, caption):
                     resized_poster = await fetch_image(poster_url)
 
             filenames = filename.replace(" ", '-')
-            btn = [[InlineKeyboardButton('🌲 Get Files 🌲', url=f"https://t.me/{UPDATES_LINK}?start=getfile-{filenames}")]]
-
+            btn = [[InlineKeyboardButton('🌲 Get Files 🌲', url=f"https://telegram.me/{temp.U_NAME}?start=getfile-{filenames}")]]
+            
             if resized_poster:
-                await bot.send_photo(chat_id=UPDATES_LINK, photo=resized_poster, caption=text, reply_markup=InlineKeyboardMarkup(btn))
+                await bot.send_photo(chat_id=MOVIE_UPDATE_CHANNEL, photo=resized_poster, caption=text, reply_markup=InlineKeyboardMarkup(btn))
             else:
-                await bot.send_message(chat_id=UPDATES_LINK, text=text, reply_markup=InlineKeyboardMarkup(btn))
+                await bot.send_message(chat_id=MOVIE_UPDATE_CHANNEL, text=text, reply_markup=InlineKeyboardMarkup(btn))
 
     except Exception as e:
         logger.error(f"❌ Error in send_msg(): {e}")
